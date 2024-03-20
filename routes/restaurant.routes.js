@@ -33,6 +33,45 @@ const restaurantDetails = async(req,res)=>{
         res.status(500).json({Error:"Error when getting restuarant details"})
     }
 }
+
+
+const additems = async(req,res)=>{
+    try {
+        let {id} = req.params
+
+        let restaurant = await RestuarantModel.findOne({_id:id});
+
+        if(!restaurant) return res.status(404).json({Error:"Restaurant not found"})
+
+        let newItem = req.body
+
+        await RestuarantModel.findByIdAndUpdate({_id:id},{$push:{menu:newItem}})
+
+        res.status(201).json({Message:"Item added to menu"})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({Error:"Error while adding item to menu"})
+    }
+}
+
+const menuItems = async(req,res)=>{
+    try {
+        let {id} = req.params
+
+        let restaurant = await RestuarantModel.findOne({_id:id});
+
+        if(!restaurant) return res.status(404).json({Error:"Restaurant not found"})
+
+        let menu = restaurant.menu;
+        
+
+        res.status(200).json(menu)
+
+    } catch (error) {
+        
+    }
+}
 module.exports={
-    newRestaurant,allRestraunts,restaurantDetails
+    newRestaurant,allRestraunts,restaurantDetails,additems,menuItems
 }

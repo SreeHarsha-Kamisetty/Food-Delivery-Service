@@ -1,6 +1,6 @@
 const express = require("express");
 const { register, login, passwordReset } = require("./user.routes");
-const { newRestaurant, allRestraunts, restaurantDetails } = require("./restaurant.routes");
+const { newRestaurant, allRestraunts, restaurantDetails, additems, menuItems } = require("./restaurant.routes");
 
 const ApiRouter = express.Router()
 
@@ -15,7 +15,8 @@ ApiRouter.post("/restaurants",newRestaurant)
 ApiRouter.get("/restaurants",allRestraunts)
 ApiRouter.get("/restaurants/:id",restaurantDetails)
 
-
+ApiRouter.post("/restaurants/:id/menu",additems)
+ApiRouter.get("/restaurants/:id/menu",menuItems)
 
 
 module.exports={
