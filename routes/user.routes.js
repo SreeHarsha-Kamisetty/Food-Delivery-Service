@@ -49,6 +49,31 @@ const login = async(req,res)=>{
     }
 }
 
+const passwordReset = async(req,res)=>{
+    try {
+        let {id} = req.params;
+        let{currentPassword,newPassword} = req.body;
+
+        let user = await UserModel.findOne({_id:id})
+
+        if(!user) return res.status(404).json({Error:"User not found."}) 
+
+        let passwordMatch = await bcrypt.compare(currentPassword, user.password)
+
+        if(!passwordMatch) return res.status(401).json({Error:"Your current password doesnt not match"})
+
+        let hashedPassword = await bcrypt.hash(newPassword, 7)
+
+        await UserModel.findByIdAndUpdate({_id:id},{password:hashedPassword});
+
+        res.sendStatus(204);
+
+    } catch (error) {
+
+        res.status(500).json({Error:"Error while updating password"})
+    }
+}
+
 module.exports={
-    register,login
+    register,login,passwordReset
 }
