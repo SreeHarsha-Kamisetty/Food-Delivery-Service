@@ -72,6 +72,28 @@ const menuItems = async(req,res)=>{
         
     }
 }
+
+
+const deleteItem = async(req,res)=>{
+    try {
+        let {id} = req.params
+        let {item} = req.params
+        let restaurant = await RestuarantModel.findOne({_id:id});
+
+        if(!restaurant) return res.status(404).json({Error:"Restaurant not found"})
+
+        
+
+        await RestuarantModel.findByIdAndUpdate({_id:id},{$pull:{menu:{_id:item}}})
+
+        res.status(202).json({Message:"Item removed from menu"})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({Error:"Error while adding item to menu"})
+    }
+}
+
 module.exports={
-    newRestaurant,allRestraunts,restaurantDetails,additems,menuItems
+    newRestaurant,allRestraunts,restaurantDetails,additems,menuItems,deleteItem
 }
